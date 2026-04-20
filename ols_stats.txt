@@ -1,0 +1,22 @@
+OLS Regression — ECI Score vs Time
+=====================================
+Beta (slope):        0.051563  (ECI points per day)
+Intercept:           98.3766
+R-squared:           0.8207
+P-value:             4.78e-130
+Std Error (slope):   0.001301
+
+Interpretation
+--------------
+Beta annualized:     18.82 ECI points per year
+N models:            345
+Date range:          2023-02-24 to 2026-04-08
+
+ACF Diagnosis
+-------------
+Lag-1 autocorr (residuals): 0.4169
+Lag-2 autocorr (residuals): 0.2061
+Lag-3 autocorr (residuals): -0.0108
+
+Note: Significant residual autocorrelation means OLS standard errors
+are underestimated — this is the core frequentist flaw this project corrects.
