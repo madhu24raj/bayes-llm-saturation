@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
+# ── 1. LOAD & CENTER ──────────────────────────────────────────────────────────
 eci_df = pd.read_csv("benchmark_data/epoch_capabilities_index.csv")
 eci_df['Release date'] = pd.to_datetime(eci_df['Release date'], errors='coerce')
 eci_df = eci_df.dropna(subset=['Release date', 'ECI Score'])
@@ -13,7 +14,7 @@ eci_df['date_numeric'] = (eci_df['Release date'] - eci_df['Release date'].min())
 x_mean = eci_df['date_numeric'].mean()
 eci_df['X_centered'] = eci_df['date_numeric'] - x_mean
 
-# 2. OLS PER ORGANIZATION
+# ── 2. OLS PER ORGANIZATION ───────────────────────────────────────────────────
 top_orgs = ['OpenAI', 'Google DeepMind', 'Meta AI', 'Anthropic', 'xAI']
 org_colors = {
     'OpenAI': '#F472B6',
@@ -52,7 +53,7 @@ for org in top_orgs:
     print(f"  P-value:    {p:.2e}")
     print(f"  Lag-1 ACF:  {lag1:.3f}")
 
-# PLOT PER-ORG RESIDUALS ─────────────────────────────────────────────────
+# ── 3. PLOT PER-ORG RESIDUALS ─────────────────────────────────────────────────
 fig, axes = plt.subplots(len(org_results), 1,
                           figsize=(12, 2.8 * len(org_results)))
 fig.patch.set_facecolor('white')
@@ -77,3 +78,30 @@ for ax, (org, res) in zip(axes, org_results.items()):
 plt.tight_layout()
 plt.savefig("org_residuals.png", dpi=150, bbox_inches='tight')
 plt.show()
+
+# ── 4. BAYESIAN SETUP ─────────────────────────────────────────────────────────
+# Starting point: global model with priors on beta_0, beta_1, sigma^2
+# Y_i = beta_0 + beta_1 * X_centered_i + epsilon_i
+# Prior: beta_0, beta_1 ~ N(0, 100)   (weakly informative)
+#        sigma^2 ~ Inverse-Gamma(a0, b0)
+
+y = eci_df['ECI Score'].values
+x = eci_df['X_centered'].values
+n = len(y)
+
+# Weakly informative priors
+mu_0    = 0       # prior mean on betas
+tau_0   = 100     # prior variance on betas (wide = weakly informative)
+a_0     = 1       # Inverse-Gamma shape for sigma^2
+b_0     = 1       # Inverse-Gamma scale for sigma^2
+
+print("\n" + "=" * 50)
+print("BAYESIAN PRIOR SETUP")
+print("=" * 50)
+print(f"  beta_0 prior: N({mu_0}, {tau_0})")
+print(f"  beta_1 prior: N({mu_0}, {tau_0})")
+print(f"  sigma^2 prior: Inv-Gamma({a_0}, {b_0})")
+print(f"  n observations: {n}")
+print(f"  X centered at: day {x_mean:.1f}")
+print("\n  Next step: Gibbs sampler for beta_0, beta_1, sigma^2")
+print("  Then: add rho ~ Uniform(-1, 1) with Metropolis step")
