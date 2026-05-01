@@ -270,3 +270,25 @@ lb_raw = acorr_ljungbox(all_raw, lags=[10], return_df=True)
 lb_ar1 = acorr_ljungbox(all_ar1, lags=[10], return_df=True)
 print(f"Ljung-Box p-value — Raw:         {lb_raw['lb_pvalue'].values[0]:.4f}")
 print(f"Ljung-Box p-value — AR(1):       {lb_ar1['lb_pvalue'].values[0]:.4f}")
+
+
+# Trace plots - global params only (don't need all b0/b1 traces)
+param_labels_p2 = [r'$\beta_0$', r'$\beta_1$', r'$\rho$', r'$\sigma$', r'$\tau_0$']
+fig, axes = plt.subplots(5, 1, figsize=(12, 10), sharex=True)
+fig.suptitle("Phase 2 Trace Plots (Global Parameters)", fontsize=14)
+for i in range(5):
+    axes[i].plot(trace[:, i], color='#A78BFA', alpha=0.6, linewidth=0.5)
+    axes[i].set_ylabel(param_labels_p2[i])
+    axes[i].grid(True, alpha=0.3)
+axes[-1].set_xlabel("Post-Burnin Iteration")
+plt.tight_layout()
+plt.savefig("phase2_traces.png", dpi=150)
+
+# Add SD column to your summary print
+print("\n=== Phase 2 Posterior Summary with SDs ===")
+p2_names = ['beta0', 'beta1', 'rho', 'sigma', 'tau0']
+for i, name in enumerate(p2_names):
+    mean_val = np.mean(trace[:, i])
+    sd_val   = np.std(trace[:, i])
+    ci_l, ci_u = np.percentile(trace[:, i], [2.5, 97.5])
+    print(f"{name:6}: Mean={mean_val:8.4f} SD={sd_val:.4f} | 95% CI:[{ci_l:.4f}, {ci_u:.4f}]")

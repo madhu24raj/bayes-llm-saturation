@@ -344,3 +344,35 @@ p_anthropic_below = np.mean(b1_samples[:, anthropic_idx] < 0)
 
 print(f"P(OpenAI slope < global):    {p_openai_below:.3f}")
 print(f"P(Anthropic slope < global): {p_anthropic_below:.3f}")
+
+
+# Trace plots - global params only (don't need all b0/b1 traces)
+param_labels_p2 = [r'$\beta_0$', r'$\beta_1$', r'$\rho$', r'$\sigma$', r'$\tau_0$']
+fig, axes = plt.subplots(5, 1, figsize=(12, 10), sharex=True)
+fig.suptitle("Phase 2 Trace Plots (Global Parameters)", fontsize=14)
+for i in range(5):
+    axes[i].plot(trace[:, i], color='#A78BFA', alpha=0.6, linewidth=0.5)
+    axes[i].set_ylabel(param_labels_p2[i])
+    axes[i].grid(True, alpha=0.3)
+axes[-1].set_xlabel("Post-Burnin Iteration")
+plt.tight_layout()
+plt.savefig("phase2_traces.png", dpi=150)
+
+# Phase 3 - 6 global params
+param_labels_p3 = [r'$\beta_0$', r'$\beta_1$', r'$\rho$', r'$\sigma$', r'$\tau_0$', r'$\tau_1$']
+fig, axes = plt.subplots(6, 1, figsize=(12, 12), sharex=True)
+fig.suptitle("Phase 3 Trace Plots (Global Parameters)", fontsize=14)
+for i in range(6):
+    axes[i].plot(trace[:, i], color='#60A5FA', alpha=0.6, linewidth=0.5)
+    axes[i].set_ylabel(param_labels_p3[i])
+    axes[i].grid(True, alpha=0.3)
+axes[-1].set_xlabel("Post-Burnin Iteration")
+plt.tight_layout()
+plt.savefig("phase3_traces.png", dpi=150)
+
+# Add SD column to your summary print
+for i, name in enumerate(names):
+    mean_val = np.mean(global_samples[:, i])
+    sd_val   = np.std(global_samples[:, i])
+    ci_l, ci_u = np.percentile(global_samples[:, i], [2.5, 97.5])
+    print(f"{name:6}: Mean={mean_val:8.4f} SD={sd_val:.4f} | 95% CI:[{ci_l:.4f}, {ci_u:.4f}]")
