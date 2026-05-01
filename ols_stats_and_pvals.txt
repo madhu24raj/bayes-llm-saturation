@@ -20,9 +20,9 @@ Lag-3 autocorr (residuals): -0.0108
 
 Group-Specific OLS Regression
 ==========================================
-OpenAI           | Beta (ann.):  13.15 ECI/yr | R2: 0.7997 | N: 83
-Google DeepMind  | Beta (ann.):  20.58 ECI/yr | R2: 0.8253 | N: 39
-Meta AI          | Beta (ann.):  14.74 ECI/yr | R2: 0.8797 | N: 27
-Anthropic        | Beta (ann.):  14.00 ECI/yr | R2: 0.9165 | N: 75
-xAI              | Beta (ann.):  18.99 ECI/yr | R2: 0.7319 | N: 11
-Other            | Beta (ann.):  19.93 ECI/yr | R2: 0.8031 | N: 110
+OpenAI           | Beta (ann.):  13.15 ECI/yr | R2: 0.7997 | p-val: 5.14e-30 | N: 83
+Google DeepMind  | Beta (ann.):  20.58 ECI/yr | R2: 0.8253 | p-val: 1.38e-15 | N: 39
+Meta AI          | Beta (ann.):  14.74 ECI/yr | R2: 0.8797 | p-val: 5.32e-13 | N: 27
+Anthropic        | Beta (ann.):  14.00 ECI/yr | R2: 0.9165 | p-val: 4.27e-41 | N: 75
+xAI              | Beta (ann.):  18.99 ECI/yr | R2: 0.7319 | p-val: 7.84e-04 | N: 11
+Other            | Beta (ann.):  19.93 ECI/yr | R2: 0.8031 | p-val: 6.63e-40 | N: 110
